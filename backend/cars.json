@@ -8,7 +8,9 @@
     "price": "950000",
     "fuel": "Petrol",
     "transmission": "Automatic",
-    "images": ["uploads/creta.jpg"]
+    "images": [
+      "uploads/creta.jpg"
+    ]
   },
   {
     "id": 1772120683696,
@@ -19,6 +21,103 @@
     "price": "750000",
     "fuel": "Diesel",
     "transmission": "Manual",
-    "images": ["uploads/venue.jpg"]
+    "images": [
+      "uploads/venue.jpg"
+    ]
+  },
+  {
+    "id": 1774609792850,
+    "createdAt": 1774609792850,
+    "name": "MG Hector",
+    "year": "2021",
+    "km": "2345",
+    "fuel": "Petrol",
+    "transmission": "Manual",
+    "owners": "1st Owner",
+    "service": "Full Service History",
+    "accident": "No",
+    "rc": "Available",
+    "insurance": "Third Party",
+    "loan": "Clear",
+    "city": "Kolkata",
+    "price": "0",
+    "images": [
+      "uploads/1774609792840-download (22).jpeg"
+    ]
+  },
+  {
+    "id": 1774614142338,
+    "createdAt": 1774614142338,
+    "name": "BMW 7 Series",
+    "year": "2023",
+    "km": "23456",
+    "fuel": "Diesel",
+    "transmission": "Manual",
+    "owners": "2nd Owner",
+    "service": "Full Service History",
+    "accident": "No",
+    "rc": "Available",
+    "insurance": "Comprehensive",
+    "loan": "Clear",
+    "exterior": "Excellent",
+    "interior": "Good",
+    "tyre": "New",
+    "sellerName": "himesh",
+    "sellerPhone": "9701990128",
+    "city": "Bangalore",
+    "price": "4595400",
+    "images": [
+      "uploads/1774614142330-download (23).jpeg"
+    ]
+  },
+  {
+    "id": 1774614735422,
+    "createdAt": 1774614735422,
+    "name": "Maruti Swift",
+    "year": "2017",
+    "km": "34568",
+    "fuel": "Diesel",
+    "transmission": "Manual",
+    "owners": "1st Owner",
+    "service": "Full Service History",
+    "accident": "No",
+    "rc": "Available",
+    "insurance": "Third Party",
+    "loan": "Clear",
+    "exterior": "Excellent",
+    "interior": "Like New",
+    "tyre": "New",
+    "sellerName": "ramu roomate",
+    "sellerPhone": "1234567891",
+    "city": "Vijayawada",
+    "price": "172886",
+    "images": [
+      "uploads/1774614735412-download (24).jpeg"
+    ]
+  },
+  {
+    "id": 1774622099996,
+    "createdAt": 1774622099996,
+    "name": "Mahindra Scorpio",
+    "year": "2023",
+    "km": "56780",
+    "fuel": "Petrol",
+    "transmission": "",
+    "owners": "1st Owner",
+    "service": "Full Service History",
+    "accident": "No",
+    "rc": "Available",
+    "insurance": "Comprehensive",
+    "loan": "Clear",
+    "exterior": "Excellent",
+    "interior": "Needs Cleaning",
+    "tyre": "New",
+    "sellerName": "naruto",
+    "sellerPhone": "8686154111",
+    "city": "Bangalore",
+    "price": "766066",
+    "images": [
+      "uploads/1774622099992-download (25).jpeg"
+    ]
   }
 ]

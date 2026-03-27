@@ -10,8 +10,7 @@ export default function Home() {
 
       {/* ===== HERO ===== */}
       <section className="hero-section">
-  <img src="/car.jpg" className="hero-bg" alt="Luxury Car" />
-  
+  <img src="/professional_car_hero_dark.png" className="hero-bg" alt="Luxury Corporate Car" />
   <div className="hero-content">
     <h1>Experience <span>Luxury</span></h1>
     <p>Discover premium new & used cars at unbeatable prices.</p>

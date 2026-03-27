@@ -384,7 +384,8 @@ button:hover {
 
 .overview {
   margin-top:40px;
-  background:white;
+  background:rgba(255, 255, 255, 0.05); /* Fixed white space blocking text */
+  color: white;
   padding:30px;
   border-radius:18px;
 }

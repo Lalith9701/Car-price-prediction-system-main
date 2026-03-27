@@ -1,0 +1,34 @@
+[
+  {
+    "id": "1774606785499",
+    "name": "Test User",
+    "phone": "1234567890",
+    "password": "$2b$10$5XMGdesUHYL2UPAyV6JfHu6.XcHWcSktcgPABkmH1UUPbwg3a2L1y"
+  },
+  {
+    "id": "1774607441828",
+    "name": "lalith",
+    "phone": "9701990126",
+    "password": "$2b$10$1aU5belCDjgduMMF6SwWJeCEbGR5GZKe91o3lk05iUPlHSLfGdGVu"
+  },
+  {
+    "id": "1774614563668",
+    "name": "ramu roomate",
+    "phone": "1234567891",
+    "password": "$2b$10$D7207q29QJ4xQ9u0KFuTJ.pvSCXdUsw1H7rni520.lef.BgR.T7tq"
+  },
+  {
+    "id": "1774624149046",
+    "name": "t",
+    "phone": "9999999999",
+    "password": "$2b$10$vFNbyUcSJomNuAQN3iqukub.IxBEDVQGZ6FhWSj0ogQu5mc4sDQvi",
+    "gender": "Male"
+  },
+  {
+    "id": "1774624439853",
+    "name": "ajith",
+    "phone": "6305869909",
+    "password": "$2b$10$kRWe9EtmZ0Ig14cg9POhp.eUwhks1FJ/.kN8mf09QVslufCnEUxKa",
+    "gender": "Male"
+  }
+]

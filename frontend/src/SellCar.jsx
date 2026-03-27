@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { carDB } from "./data/carDB";
 import { cities } from "./data/cities";
 import { expandCars } from "./data/carDB";
@@ -17,6 +18,9 @@ const accidentOptions = ["Yes", "No"];
 const rcOptions = ["Available", "Not Available"];
 const insuranceTypes = ["Third Party", "Comprehensive"];
 const loanStatus = ["Clear", "Active", "No Finance"];
+const exteriorOptions = ["Excellent", "Minor Scratches", "Dents", "Major Damage"];
+const interiorOptions = ["Like New", "Good", "Needs Cleaning", "Damaged"];
+const tyreOptions = ["New", "Good for 10k km", "Needs Replacement"];
 
 /* ================= BASE PRICE ================= */
 
@@ -260,8 +264,14 @@ export default function SellCar() {
     city: "",
     rc: "",
     insurance: "",
-    loan: ""
+    loan: "",
+    exterior: "",
+    interior: "",
+    tyre: ""
   });
+
+  const [sellerName, setSellerName] = useState("");
+  const [sellerPhone, setSellerPhone] = useState("");
 
   const [models, setModels] = useState([]);
   const [images, setImages] = useState([]);
@@ -270,7 +280,10 @@ export default function SellCar() {
   const [goodPrice, setGoodPrice] = useState(0);
   const [excellentPrice, setExcellentPrice] = useState(0);
   const [dealerPrice, setDealerPrice] = useState(0);
-  const [sellType, setSellType] = useState("");
+  const [sellType, setSellType] = useState("Individual");
+  const [listingDuration, setListingDuration] = useState(10);
+  
+  const navigate = useNavigate();
   
 
   const setValue = (key, value) => {
@@ -295,10 +308,21 @@ export default function SellCar() {
   });
 };
   const selectBrand = (b) => {
-  setValue("brand", b);
-  setValue("model", ""); // reset model
-  setModels(carDB[b] || []);
-};
+    setValue("brand", b);
+    setValue("model", ""); 
+    setModels(carDB[b] || []);
+  };
+
+  useEffect(() => {
+    const localUser = localStorage.getItem("user");
+    if (localUser) {
+      try {
+        const u = JSON.parse(localUser);
+        setSellerName(u.name || "");
+        setSellerPhone(u.phone || "");
+      } catch (e) {}
+    }
+  }, []);
 
   /* ✅ FIXED useEffect */
   useEffect(() => {
@@ -317,27 +341,53 @@ export default function SellCar() {
     return;
   }
 
-const result = calculateCarPrice(car);
+  const fetchPrediction = async () => {
+    try {
+      let ownerInt = 1;
+      if (car.owner === "2nd Owner") ownerInt = 2;
+      else if (car.owner === "3rd Owner") ownerInt = 3;
 
-let fair = result.fair;
-let good = result.good;
-let excellent = result.excellent;
-let dealer = result.dealer;
+      const res = await fetch("http://127.0.0.1:8000/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          brand: car.brand,
+          model: car.model,
+          year: parseInt(car.year) || 2015,
+          km_driven: parseInt(car.km) || 50000,
+          fuel: car.fuel,
+          transmission: car.transmission,
+          owner: ownerInt
+        })
+      });
+      const data = await res.json();
+      let mid = data.predicted_price;
+      if (!mid) return;
 
-// 🔥 APPLY SELL TYPE LOGIC
-if (sellType === "Individual") {
-  fair *= 1.08;
-  good *= 1.10;
-  excellent *= 1.12;
-  dealer *= 1.05;
-}
+      let fair = Math.round(mid * 0.92);
+      let good = Math.round(mid * 1.00);
+      let excellent = Math.round(mid * 1.08);
+      let dealer = Math.round(fair * 0.93);
 
-setFairPrice(Math.round(fair));
-setGoodPrice(Math.round(good));
-setExcellentPrice(Math.round(excellent));
-setDealerPrice(Math.round(dealer));
+      if (sellType === "Individual") {
+        fair *= 1.08;
+        good *= 1.10;
+        excellent *= 1.12;
+        dealer *= 1.05;
+      }
 
-}, [car]);
+      setFairPrice(Math.round(fair));
+      setGoodPrice(Math.round(good));
+      setExcellentPrice(Math.round(excellent));
+      setDealerPrice(Math.round(dealer));
+    } catch(err) {
+      console.error("Prediction error:", err);
+    }
+  };
+
+  fetchPrediction();
+
+}, [car, sellType]);
   
 
   const safeCar = {
@@ -363,16 +413,53 @@ setDealerPrice(Math.round(dealer));
   const fairPos = getPosition(fairPrice);
   const goodPos = getPosition(goodPrice);
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
     if (!car.brand || !car.model || images.length === 0) {
       alert("Fill details + upload images");
       return;
     }
 
-    console.log("Car:", car);
-    console.log("Images:", images);
+    const formData = new FormData();
+    formData.append("name", `${car.brand} ${car.model}`);
+    formData.append("year", car.year);
+    formData.append("km", car.km);
+    formData.append("fuel", car.fuel);
+    formData.append("transmission", car.transmission);
+    formData.append("owners", car.owner);
+    formData.append("city", car.city);
+    formData.append("service", car.service);
+    formData.append("accident", car.accident);
+    formData.append("rc", car.rc);
+    formData.append("insurance", car.insurance);
+    formData.append("loan", car.loan);
+    formData.append("exterior", car.exterior);
+    formData.append("interior", car.interior);
+    formData.append("tyre", car.tyre);
+    formData.append("sellerName", sellerName);
+    formData.append("sellerPhone", sellerPhone);
+    formData.append("price", fairPrice);
+    formData.append("listingDuration", listingDuration);
 
-    alert("🚀 Car posted to Used Cars!");
+    for (let i = 0; i < images.length; i++) {
+       formData.append("images", images[i]);
+    }
+
+    try {
+      const res = await fetch("http://localhost:5050/cars", {
+        method: "POST",
+        body: formData
+      });
+      const data = await res.json();
+      if(data.success){
+        alert("🚀 Car posted to Used Cars!");
+        navigate("/listing");
+      } else {
+        alert("Failed to post car.");
+      }
+    } catch(e) {
+      console.error(e);
+      alert("Error posting car.");
+    }
   };
 
   return (
@@ -476,17 +563,51 @@ setDealerPrice(Math.round(dealer));
           <option>Select Loan</option>
           {loanStatus.map(l => <option key={l}>{l}</option>)}
         </select>
+
+        <select onChange={e => setValue("exterior", e.target.value)}>
+          <option>Exterior Condition</option>
+          {exteriorOptions.map(e => <option key={e}>{e}</option>)}
+        </select>
+
+        <select onChange={e => setValue("interior", e.target.value)}>
+          <option>Interior Condition</option>
+          {interiorOptions.map(i => <option key={i}>{i}</option>)}
+        </select>
+
+        <select onChange={e => setValue("tyre", e.target.value)}>
+          <option>Tyre Condition</option>
+          {tyreOptions.map(t => <option key={t}>{t}</option>)}
+        </select>
+
+        <div className="field">
+          <input 
+            value={sellerName}
+            onChange={e => setSellerName(e.target.value)}
+            required
+          />
+          <label>Seller Name</label>
+        </div>
+
+        <div className="field">
+          <input 
+            value={sellerPhone}
+            onChange={e => setSellerPhone(e.target.value)}
+            required
+          />
+          <label>Contact Number</label>
+        </div>
+
+        <div className="field">
+          <select value={listingDuration} onChange={e => setListingDuration(Number(e.target.value))} required>
+            <option value={10}>List for 10 Days</option>
+            <option value={20}>List for 20 Days</option>
+          </select>
+        </div>
+
 <div className="sell-type-toggle">
   <span>
-  I want to sell to {!sellType && "(select one)"}
+  I want to sell to
   </span>
-
-  <button
-    className={sellType === "Dealer" ? "active" : ""}
-    onClick={() => setSellType("Dealer")}
-  >
-    Dealer
-  </button>
 
   <button
     className={sellType === "Individual" ? "active" : ""}

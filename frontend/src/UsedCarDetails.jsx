@@ -27,7 +27,12 @@ return(
 
 <h2>₹ {car.price}</h2>
 
-<button className="buy">Book Test Drive</button>
+<button 
+  className="buy" 
+  onClick={() => document.querySelector('.seller-info')?.scrollIntoView({ behavior: 'smooth' })}
+>
+  Contact Seller for Details
+</button>
 
 </div>
 
@@ -44,6 +49,17 @@ return(
 </div>
 
 </div>
+
+{/* SELLER INFO */}
+{(car.sellerName || car.sellerPhone) && (
+<div className="overview seller-info">
+  <h3>Seller Info</h3>
+  <div className="grid">
+    {car.sellerName && <p>Name: {car.sellerName}</p>}
+    {car.sellerPhone && <p>Contact: {car.sellerPhone}</p>}
+  </div>
+</div>
+)}
 
 </div>
 );

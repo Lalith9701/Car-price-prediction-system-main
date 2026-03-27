@@ -1695,6 +1695,7 @@ export default function CarDetails() {
   const [showBooking, setShowBooking] = useState(false);
   const [tab, setTab] = useState("overview");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [address, setAddress] = useState("");
 
 useEffect(() => {
   const interval = setInterval(() => {
@@ -1738,16 +1739,24 @@ const prevSlide = () => {
             <span className="price-value">₹ {car.price}</span>
           </div>
 
-          <div className="hero-buttons">
-            <button className="btn-primary glow">
-              Get Best Offer
-            </button>
-
+          <div className="hero-buttons" style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <input 
+              type="text" 
+              placeholder="Enter your address to find showrooms (e.g. Banjara Hills, Hyderabad)" 
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              style={{ padding: "12px 16px", borderRadius: "10px", border: "1px solid #ddd", fontSize: "14px", outline: "none", width: "100%", color: "#333" }}
+            />
             <button
-              className="btn-outline"
-              onClick={() => setShowBooking(true)}
+              className="btn-primary glow"
+              onClick={() => {
+                const brand = car.name.split(' ')[0];
+                const queryLocation = address.trim() ? `near ${address.trim()}` : "near me";
+                window.open(`https://www.google.com/maps/search/${brand}+showrooms+${queryLocation}`, "_blank");
+              }}
+              style={{ width: "100%" }}
             >
-              🚗 Book Test Drive
+              📍 Locate Nearby Showrooms
             </button>
           </div>
 

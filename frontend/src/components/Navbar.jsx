@@ -1,84 +1,41 @@
 import { Link, useNavigate } from "react-router-dom";
-import { FiHelpCircle, FiUser, FiMapPin, FiGlobe } from "react-icons/fi";
+import { FiUser } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { auth } from "../firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import "./Navbar.css";
+import "./ProfessionalProfile.css";
 import { useTranslation } from "react-i18next";
 
 export default function Navbar(){
 
   const navigate = useNavigate();
 
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const [user,setUser] = useState(null);
   const [open,setOpen] = useState(false);
-  const [helpOpen,setHelpOpen] = useState(false);
-  const [langOpen,setLangOpen] = useState(false);
-
-  /* ⭐ LANGUAGE */
-  const changeLang=(lng)=>{
-    i18n.changeLanguage(lng);
-    setLangOpen(false);
-  };
-
-  /* ⭐ LOCATION */
-  const [locationOpen,setLocationOpen] = useState(false);
-  const [search,setSearch] = useState("");
-  const [selectedCity,setSelectedCity] = useState("");
-
-  const cities=[
-    "Hyderabad","Bangalore","Chennai","Mumbai","Delhi","Pune",
-    "Kolkata","Ahmedabad","Jaipur","Lucknow","Nagpur","Indore",
-    "Patna","Vadodara","Ghaziabad","Navi Mumbai",
-    "Thane","Bhopal","Visakhapatnam","Pimpri-Chinchwad",
-    "Ludhiana","Agra","Nashik","Faridabad","Meerut","Rajkot",
-    "Kalyan-Dombivli","Vasai-Virar","Varanasi","Srinagar",
-    "Aurangabad","Dhanbad","Amritsar","Nanded","Allahabad",
-    "Howrah","Gwalior","Jabalpur","Coimbatore","Vijayawada",
-    "Jodhpur","Madurai","Raipur","Kota","Guwahati","Chandigarh",
-    "Solapur","Hubli-Dharwad","Mysore","Tiruchirappalli",
-    "Bareilly","Aligarh","Moradabad","Jalandhar","Bhubaneswar",
-    "Salem","Warangal","Guntur","Bhiwandi","Saharanpur",
-    "Gorakhpur","Amravati","Bikaner","Noida","Jamshedpur",
-    "Bhilai","Cuttack","Firozabad","Kochi","Nellore",
-    "Bhavnagar","Dehradun","Durgapur","Pulivendula",
-    "Asansol","Rourkela","Nizamabad","Kolhapur","Ajmer",
-    "Gulbarga","Jamnagar","Ujjain","Loni","Siliguri",
-    "Jhansi","Ulhasnagar","Mangalore","Belgaum",
-    "Ambattur","Tirunelveli","Malegaon","Gaya","Jalgaon",
-    "Udaipur","Maheshtala","Davanagere","Kamarhati",
-    "Rohtak","Kakinada","Bardhaman","Yamunanagar",
-    "Tiruppur","Muzaffarnagar", "Bilaspur","Ahmednagar","Panipat","Latur",
-    "Dhule","Darbhanga","Nagercoil","Korba","Ballari",
-    "Bhatpara","Pali","Deoghar","Khandwa","Barasat",
-    "Ongole","Gopalpur","Ramagundam","Karimnagar",
-    "Darjeeling","Etawah","Kaithal","Bharatpur",
-    "Begusarai","New Delhi","Tirupati","Hapur","Sikar","Panchkula","Satara",
-    "Mokokchung","Dimapur","Tuensang","Kohima","Wokha",
-
-  ];
-
-  const filtered=cities.filter(c =>
-    c.toLowerCase().includes(search.toLowerCase())
-  );
 
   useEffect(()=>{
-    const unsub=onAuthStateChanged(auth,u=>setUser(u));
-    return ()=>unsub();
+    const localUser = localStorage.getItem("user");
+    if (localUser) {
+      try {
+        const u = JSON.parse(localUser);
+        // Map phone to email if it's stored that way, or just use u.email if exists
+        setUser({ ...u, displayName: u.name, email: u.email || u.phone || "" });
+      } catch(e) {}
+    } else {
+      const unsub = onAuthStateChanged(auth, u => setUser(u));
+      return () => unsub();
+    }
   },[]);
 
   const logout=async()=>{
-    await signOut(auth);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    try { await signOut(auth); } catch(e){}
     setOpen(false);
-    navigate("/");
-  };
-
-  const chooseCity=(city)=>{
-    setSelectedCity(city);
-    setSearch(city);
-    setLocationOpen(false);
+    window.location.href = "/";
   };
 
   return(
@@ -100,77 +57,6 @@ export default function Navbar(){
       {/* RIGHT */}
       <div className="nav-right">
 
-        {/* ⭐ LANGUAGE */}
-        <div className="lang-wrapper">
-          <FiGlobe
-            className="nav-icon"
-            onClick={()=>setLangOpen(!langOpen)}
-          />
-
-          {langOpen && (
-            <div className="lang-dropdown">
-              <p onClick={()=>changeLang("en")}>🇬🇧 English</p>
-              <p onClick={()=>changeLang("te")}>🇮🇳 Telugu</p>
-              <p onClick={()=>changeLang("hi")}>🇮🇳 Hindi</p>
-            </div>
-          )}
-        </div>
-
-        {/* ⭐ HELP */}
-        <div className="help-wrapper">
-          <FiHelpCircle
-            className="nav-icon"
-            onClick={()=>setHelpOpen(!helpOpen)}
-          />
-
-          {helpOpen && (
-            <div className="help-dropdown">
-              <p onClick={()=>navigate("/FAQ")}>{t("FAQ")}</p>
-              <p onClick={()=>navigate("/support")}>{t("ContactSupport")}</p>
-              <p onClick={()=>navigate("/seller-support")}>{t("ChatSeller")}</p>
-              <p onClick={()=>navigate("/sell-guide")}>{t("SellGuide")}</p>
-            </div>
-          )}
-        </div>
-
-        {/* ⭐ LOCATION */}
-        <div className="location-wrapper">
-
-          <FiMapPin
-            className="nav-icon"
-            onClick={()=>setLocationOpen(!locationOpen)}
-          />
-
-          {locationOpen && (
-            <div className="location-dropdown">
-
-              <input
-                className="location-search"
-                placeholder={t("searchCity")}
-                value={search}
-                onChange={(e)=>setSearch(e.target.value)}
-              />
-
-              <div className="location-list">
-                {filtered.map(city=>(
-                  <div
-                    key={city}
-                    className="city-item"
-                    onClick={()=>chooseCity(city)}
-                  >
-                    {city}
-                  </div>
-                ))}
-
-                {filtered.length===0 && (
-                  <span className="no-city">{t("noCity")}</span>
-                )}
-              </div>
-
-            </div>
-          )}
-        </div>
-
         {/* ⭐ PROFILE */}
         <div className="profile-wrapper">
 
@@ -183,27 +69,31 @@ export default function Navbar(){
           />
 
           {open && user && (
-            <div className="profile-dropdown">
+            <div className="profile-dropdown professional">
+              <div className="profile-header">
+                <img
+                  src={user.gender === "Female" ? `https://avatar.iran.liara.run/public/girl?username=${user.displayName || "user"}` : `https://avatar.iran.liara.run/public/boy?username=${user.displayName || "user"}`}
+                  className="drop-photo"
+                  alt="user"
+                />
+                <div className="profile-info">
+                  <h3>{user.displayName || "HUB User"}</h3>
+                  <p>{user.email}</p>
+                </div>
+              </div>
 
-              <img
-                src={user.photoURL || "/user.png"}
-                className="drop-photo"
-                alt="user"
-              />
+              <div className="profile-actions">
+                <button
+                  className="btn-settings"
+                  onClick={()=>{setOpen(false); navigate("/profile");}}
+                >
+                  My Profile
+                </button>
 
-              <h3>{user.displayName || "HUB User"}</h3>
-              <p>{user.email}</p>
-
-              <button
-                className="settings-btn"
-                onClick={()=>navigate("/profile")}
-              >
-                {t("myProfile")}
-              </button>
-
-              <button className="logout-btn" onClick={logout}>
-                {t("logout")}
-              </button>
+                <button className="btn-logout" onClick={logout}>
+                  Logout
+                </button>
+              </div>
 
             </div>
           )}
