@@ -1,0 +1,108 @@
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial;
+  background: #f4f6f9;
+}
+
+/* HERO */
+.hero {
+  height: 90vh;
+  background: linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6)),
+    url("https://images.unsplash.com/photo-1503376780353-7e6692767b70") center/cover;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 80px;
+}
+
+.hero-content h1 {
+  font-size: 60px;
+  margin: 0;
+}
+
+.hero-content p {
+  font-size: 22px;
+  opacity: .9;
+}
+
+.hero-actions {
+  margin-top: 25px;
+  display: flex;
+  gap: 15px;
+}
+
+.hero-actions button {
+  padding: 14px 28px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.primary {
+  background: #1a73e8;
+  color: white;
+}
+
+.secondary {
+  background: white;
+  color: black;
+}
+
+/* FEATURES */
+.features {
+  display: flex;
+  justify-content: space-around;
+  background: white;
+  padding: 30px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.1);
+}
+
+.feature {
+  font-weight: bold;
+}
+
+/* GRID */
+.grid {
+  padding: 60px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(260px,1fr));
+  gap: 25px;
+}
+
+/* CARD */
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.1);
+  transition: .3s;
+  text-align: center;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+}
+
+.card img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.price {
+  color: #1a73e8;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.card button {
+  width: 100%;
+  padding: 10px;
+  background: #1a73e8;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}

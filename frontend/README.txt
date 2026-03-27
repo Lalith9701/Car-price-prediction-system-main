@@ -1,0 +1,1 @@
+Frontend React app (create using Vite)

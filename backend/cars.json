@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1772041889152,
+    "name": "Hyundai Creta",
+    "year": "2023",
+    "km": "23222",
+    "owners": "1st Owner",
+    "price": "950000",
+    "fuel": "Petrol",
+    "transmission": "Automatic",
+    "images": ["uploads/creta.jpg"]
+  },
+  {
+    "id": 1772120683696,
+    "name": "Hyundai Venue",
+    "year": "2021",
+    "km": "45000",
+    "owners": "2nd Owner",
+    "price": "750000",
+    "fuel": "Diesel",
+    "transmission": "Manual",
+    "images": ["uploads/venue.jpg"]
+  }
+]
